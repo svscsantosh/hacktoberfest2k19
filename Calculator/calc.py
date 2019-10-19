@@ -89,6 +89,7 @@ butdiv.place(x=205,y=310)
 butclear=Button(me,padx=14,pady=119,bd=4,bg='white',text="CE",command=clrbut,font=("Courier New",16,'bold'))
 butclear.place(x=270,y=100)
 
+
 butequal=Button(me,padx=151,pady=14,bd=4,bg='white',command=equlbut,text="=",font=("Courier New",16,'bold'))
 butequal.place(x=10,y=380)
 me.mainloop()
