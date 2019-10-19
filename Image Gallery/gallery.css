@@ -6,8 +6,11 @@ body{
 	background-color:#c5d3ea;
 }
 
-.thumbnail:hover {
+.thumbnail:hover{
     transform: scale(1.2);
   }
   
-
+div img{
+    height:250px;
+    width:250px;
+}
