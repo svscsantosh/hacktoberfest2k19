@@ -19,15 +19,17 @@ int main()
     
     switch(ch) {
         case 1: {
-            int res;
+            int res,fin;
             res=incr(num);
+            fin=incr(res);
             printf("the incremented number is %d\n",res);
             break;
         }
         case 2:{
-            int res;
+            int res,fin;
             res=decr(num);
-            printf("the decremented number is %d\n",res);
+            fin=decr(res);
+            printf("the decremented number is %d\n",fin);
             break;
             
         }
