@@ -1,108 +1,132 @@
-from tkinter import *
-import tkinter.messagebox
-tk = Tk()
-tk.title("Tic Tac Toe")
+from IPython.display import clear_output
 
-pa = StringVar()
-playerb = StringVar()
-p1 = StringVar()
-p2 = StringVar()
+def display_board(board):
+    clear_output()  # Remember, this only works in jupyter!
+    
+    print('   |   |')
+    print(' ' + board[7] + ' | ' + board[8] + ' | ' + board[9])
+    print('   |   |')
+    print('-----------')
+    print('   |   |')
+    print(' ' + board[4] + ' | ' + board[5] + ' | ' + board[6])
+    print('   |   |')
+    print('-----------')
+    print('   |   |')
+    print(' ' + board[1] + ' | ' + board[2] + ' | ' + board[3])
+    print('   |   |')
+test_board = ['#','X','O','X','O','X','O','X','O','X']
+display_board(test_board)
+def player_input():
+    marker = ''
+    
+    while not (marker == 'X' or marker == 'O'):
+        marker = input('Player 1: Do you want to be X or O? ').upper()
 
-player1_name = Entry(tk, textvariable=p1, bd=5)
-player1_name.grid(row=1, column=1, columnspan=8)
-player2_name = Entry(tk, textvariable=p2, bd=5)
-player2_name.grid(row=2, column=1, columnspan=8)
-
-bclick = True
-flag = 0
-
-def disableButton():
-    button1.configure(state=DISABLED)
-    button2.configure(state=DISABLED)
-    button3.configure(state=DISABLED)
-    button4.configure(state=DISABLED)
-    button5.configure(state=DISABLED)
-    button6.configure(state=DISABLED)
-    button7.configure(state=DISABLED)
-    button8.configure(state=DISABLED)
-    button9.configure(state=DISABLED)
-
-
-
-def btnClick(buttons):
-    global bclick, flag, player2_name, player1_name, playerb, pa
-    if buttons["text"] == " " and bclick == True:
-        buttons["text"] = "X"
-        bclick = False
-        playerb = p2.get() + " Wins!"
-        pa = p1.get() + " Wins!"
-        checkForWin()
-        flag += 1
-
-
-    elif buttons["text"] == " " and bclick == False:
-        buttons["text"] = "O"
-        bclick = True
-        checkForWin()
-        flag += 1
+    if marker == 'X':
+        return ('X', 'O')
     else:
-        tkinter.messagebox.showinfo("Tic-Tac-Toe", "Button already Clicked!")
+        return ('O', 'X')
+player_input()
+def place_marker(board, marker, position):
+    board[position] = marker
+place_marker(test_board,'$',8)
+display_board(test_board)
+def win_check(board,mark):
+    
+    return ((board[7] == mark and board[8] == mark and board[9] == mark) or # across the top
+    (board[4] == mark and board[5] == mark and board[6] == mark) or # across the middle
+    (board[1] == mark and board[2] == mark and board[3] == mark) or # across the bottom
+    (board[7] == mark and board[4] == mark and board[1] == mark) or # down the middle
+    (board[8] == mark and board[5] == mark and board[2] == mark) or # down the middle
+    (board[9] == mark and board[6] == mark and board[3] == mark) or # down the right side
+    (board[7] == mark and board[5] == mark and board[3] == mark) or # diagonal
+    (board[9] == mark and board[5] == mark and board[1] == mark)) # diagonal
 
-def checkForWin():
-    if (button1['text'] == 'X' and button2['text'] == 'X' and button3['text'] == 'X' or):
-        disableButton()
-        tkinter.messagebox.showinfo("Tic-Tac-Toe", pa)
+win_check(test_board,'X')
 
-    elif(flag == 8):
-        tkinter.messagebox.showinfo("Tic-Tac-Toe", "It is a Tie")
+import random
 
-    elif (button1['text'] == 'O' and button2['text'] == 'O' and button3['text'] == 'O' or
-          button4['text'] == 'O' and button5['text'] == 'O' and button6['text'] == 'O' or
-          button7['text'] == 'O' and button8['text'] == 'O' and button9['text'] == 'O' or
-          button1['text'] == 'O' and button5['text'] == 'O' and button9['text'] == 'O' or
-          button3['text'] == 'O' and button5['text'] == 'O' and button7['text'] == 'O' or
-          button1['text'] == 'O' and button2['text'] == 'O' and button3['text'] == 'O' or
-          button1['text'] == 'O' and button4['text'] == 'O' and button7['text'] == 'O' or
-          button2['text'] == 'O' and button5['text'] == 'O' and button8['text'] == 'O' or
-          button7['text'] == 'O' and button6['text'] == 'O' and button9['text'] == 'O'):
-        disableButton()
-        tkinter.messagebox.showinfo("Tic-Tac-Toe", playerb)
+def choose_first():
+    if random.randint(0, 1) == 0:
+        return 'Player 2'
+    else:
+        return 'Player 1'
+def space_check(board, position):
+    
+    return board[position] == ' '
 
+def full_board_check(board):
+    for i in range(1,10):
+        if space_check(board, i):
+            return False
+    return True
+def player_choice(board):
+    position = 0
+    
+    while position not in [1,2,3,4,5,6,7,8,9] or not space_check(board, position):
+        position = int(input('Choose your next position: (1-9) '))
+        
+    return position
+def replay():
+    
+    return input('Do you want to play again? Enter Yes or No: ').lower().startswith('y')
 
-buttons = StringVar()
+print('Welcome to Tic Tac Toe!')
 
-label = Label( tk, text="Player 1:", font='Times 20 bold', bg='white', fg='black', height=1, width=8)
-label.grid(row=1, column=0)
+while True:
+    # Reset the board
+    theBoard = [' '] * 10
+    player1_marker, player2_marker = player_input()
+    turn = choose_first()
+    print(turn + ' will go first.')
+    
+    play_game = input('Are you ready to play? Enter Yes or No.')
+    
+    if play_game.lower()[0] == 'y':
+        game_on = True
+    else:
+        game_on = False
 
+    while game_on:
+        if turn == 'Player 1':
+            # Player1's turn.
+            
+            display_board(theBoard)
+            position = player_choice(theBoard)
+            place_marker(theBoard, player1_marker, position)
 
-label = Label( tk, text="Player 2:", font='Times 20 bold', bg='white', fg='black', height=1, width=8)
-label.grid(row=2, column=0)
+            if win_check(theBoard, player1_marker):
+                display_board(theBoard)
+                print('Congratulations! You have won the game!')
+                game_on = False
+            else:
+                if full_board_check(theBoard):
+                    display_board(theBoard)
+                    print('The game is a draw!')
+                    break
+                else:
+                    turn = 'Player 2'
 
-button1 = Button(tk, text=" ", font='Times 20 bold', bg='gray', fg='white', height=4, width=8, command=lambda: btnClick(button1))
-button1.grid(row=3, column=0)
+        else:
+            # Player2's turn.
+            
+            display_board(theBoard)
+            position = player_choice(theBoard)
+            place_marker(theBoard, player2_marker, position)
 
-button2 = Button(tk, text=' ', font='Times 20 bold', bg='gray', fg='white', height=4, width=8, command=lambda: btnClick(button2))
-button2.grid(row=3, column=1)
+            if win_check(theBoard, player2_marker):
+                display_board(theBoard)
+                print('Player 2 has won!')
+                game_on = False
+            else:
+                
+                if full_board_check(theBoard):
+                    display_board(theBoard)
+                    print('The game is a draw!')
+                    break
+                else:
+                    turn = 'Player 1'
 
-button3 = Button(tk, text=' ',font='Times 20 bold', bg='gray', fg='white', height=4, width=8, command=lambda: btnClick(button3))
-button3.grid(row=3, column=2)
+    if not replay():
+        break
 
-button4 = Button(tk, text=' ', font='Times 20 bold', bg='gray', fg='white', height=4, width=8, command=lambda: btnClick(button4))
-button4.grid(row=4, column=0)
-
-button5 = Button(tk, text=' ', font='Times 20 bold', bg='gray', fg='white', height=4, width=8, command=lambda: btnClick(button5))
-button5.grid(row=4, column=1)
-
-button6 = Button(tk, text=' ', font='Times 20 bold', bg='gray', fg='white', height=4, width=8, command=lambda: btnClick(button6))
-button6.grid(row=4, column=2)
-
-button7 = Button(tk, text=' ', font='Times 20 bold', bg='gray', fg='white', height=4, width=8, command=lambda: btnClick(button7))
-button7.grid(row=5, column=0)
-
-button8 = Button(tk, text=' ', font='Times 20 bold', bg='gray', fg='white', height=4, width=8, command=lambda: btnClick(button8))
-button8.grid(row=5, column=1)
-
-button9 = Button(tk, text=' ', font='Times 20 bold', bg='gray', fg='white', height=4, width=8, command=lambda: btnClick(button9))
-button9.grid(row=5, column=2)
-
-tk.mainloop()
