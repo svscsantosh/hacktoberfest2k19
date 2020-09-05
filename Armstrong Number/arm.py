@@ -4,7 +4,7 @@ def func1(n):
     a=len(c)
     d=0
     for i in range(a):
-        d=d+int(c[i])**3
+        d=d+int(c[i])**a
     if(d==n):
             print("Armstrong Number")
     else:
